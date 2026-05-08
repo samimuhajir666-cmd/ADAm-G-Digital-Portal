@@ -111,6 +111,7 @@ with st.form("admission_form_main", clear_on_submit=True):
             if email_status:
                 st.balloons()
                 st.snow()     
+                st.toast('Admission Form Successfully Received!', icon='✅')
                 st.success(f"Mubarak ho {name}! Aapka data save ho gaya aur Admin ko email bhej di gayi hai.")
             else:
                 st.warning(f"Data save ho gaya hai, lekin email bhejney mein masla hua.")
