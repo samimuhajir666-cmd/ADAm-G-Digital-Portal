@@ -104,8 +104,7 @@ with st.form("admission_form_main", clear_on_submit=True):
             df = pd.DataFrame(new_entry)
             file_path = "admission_data.csv"
             df.to_csv(file_path, mode='a', header=not os.path.exists(file_path), index=False)
-            
-            # --- THE DIGITAL CARD ---
+                       # Ensure this is PUSHED TO THE RIGHT (indented)
             st.markdown(f"""
             <div style="border: 3px solid #007bff; padding: 25px; border-radius: 15px; background-color: #ffffff; text-align: center; box-shadow: 10px 10px 5px #eeeeee; margin-top: 20px;">
                 <h1 style="color: #007bff; margin-bottom: 5px;">ADAm G Portal</h1>
@@ -121,8 +120,8 @@ with st.form("admission_form_main", clear_on_submit=True):
                 <p style="color: #28a745; font-weight: bold; font-size: 18px;">✅ APPLICATION RECEIVED</p>
                 <p style="font-size: 10px; color: gray;">Ref ID: {datetime.datetime.now().strftime('%Y%H%M%S')}</p>
             </div>
-            <p style="text-align: center; color: gray; font-size: 12px; margin-top: 10px;">Please take a screenshot of this card for your records.</p>
             """, unsafe_allow_html=True)
+
             
             # --- NOTIFICATIONS ---
             admin_msg = f"New Student: {name}\nCNIC: {cnic_val}\nCourse: {course}\nContact: {contact}"
