@@ -79,16 +79,13 @@ with st.form("admission_form_main", clear_on_submit=True):
         dob = st.date_input("Date of Birth", value=datetime.date(2010, 1, 1), min_value=datetime.date(1900, 1, 1))
         course = st.selectbox("Course", ["Web Dev", "Python AI", "Graphic Design", "Hifz"])
         cast = st.selectbox("Background", ["Muhajir", "Sindhi", "Punjabi", "Balochi", "Pashtun"])
-        hafiz_status = st.selectbox("Hafiz-e-Quran?", ["Yes", "No"])
     
     address_val = st.text_area("Residential Address") 
-    
-    # --- HERE IS THE SUBMIT BUTTON ---
     submitted = st.form_submit_button("Submit Admission Request")
 
     if submitted:
         if name and email_input and contact:
-            # SAVE TO CSV (All fields included)
+            # SAVE TO CSV
             new_entry = {
                 "Date": [str(datetime.date.today())],
                 "Name": [name],
@@ -97,43 +94,33 @@ with st.form("admission_form_main", clear_on_submit=True):
                 "Course": [course],
                 "Age": [age],
                 "DOB": [str(dob)],
-                "Cast": [cast],
-                "Hafiz": [hafiz_status],
-                "Address": [address_val]
             }
             df = pd.DataFrame(new_entry)
-            file_path = "admission_data.csv"
-            df.to_csv(file_path, mode='a', header=not os.path.exists(file_path), index=False)
-                       # Ensure this is PUSHED TO THE RIGHT (indented)
+            df.to_csv("admission_data.csv", mode='a', header=not os.path.exists("admission_data.csv"), index=False)
+            
+            # --- CARD LOGIC (MARDOWN FIXED) ---
             st.markdown(f"""
-            <div style="border: 3px solid #007bff; padding: 25px; border-radius: 15px; background-color: #ffffff; text-align: center; box-shadow: 10px 10px 5px #eeeeee; margin-top: 20px;">
-                <h1 style="color: #007bff; margin-bottom: 5px;">ADAm G Portal</h1>
-                <p style="font-size: 14px; color: gray; font-style: italic;">Official Admission Receipt</p>
-                <hr style="border: 1px solid #007bff; width: 80%; margin: auto;">
-                <div style="text-align: left; padding: 20px; font-family: sans-serif;">
-                    <p><strong>Student Name:</strong> {name}</p>
+            <div style="border: 3px solid #007bff; padding: 25px; border-radius: 15px; background-color: white; text-align: center; box-shadow: 5px 5px 15px #aaaaaa; margin-top: 20px; color: black;">
+                <h1 style="color: #007bff;">ADAm G Portal</h1>
+                <p style="font-style: italic;">Official Admission Receipt</p>
+                <hr style="border: 1px solid #007bff;">
+                <div style="text-align: left; padding: 10px;">
+                    <p><strong>Student:</strong> {name}</p>
                     <p><strong>Course:</strong> {course}</p>
-                    <p><strong>CNIC / ID:</strong> {cnic_val}</p>
+                    <p><strong>ID/CNIC:</strong> {cnic_val}</p>
                     <p><strong>Date:</strong> {datetime.date.today()}</p>
                 </div>
-                <hr style="border: 1px solid #eeeeee;">
-                <p style="color: #28a745; font-weight: bold; font-size: 18px;">✅ APPLICATION RECEIVED</p>
-                <p style="font-size: 10px; color: gray;">Ref ID: {datetime.datetime.now().strftime('%Y%H%M%S')}</p>
+                <h3 style="color: green;">✅ APPLICATION RECEIVED</h3>
             </div>
             """, unsafe_allow_html=True)
-
             
             # --- NOTIFICATIONS ---
-            admin_msg = f"New Student: {name}\nCNIC: {cnic_val}\nCourse: {course}\nContact: {contact}"
-            send_email("samimuhajir666@gmail.com", "ADMIN: New Admission", admin_msg)
-
-            student_msg = f"Assalamu Alaikum {name},\n\nForm received for {course}. Our team will contact you soon.\n\nJazakAllah."
-            email_status = send_email(email_input, "Form Received - ADAm G", student_msg)
+            st.balloons()
+            st.success(f"Mubarak ho {name}! Aapka form jama ho gaya hai.")
             
-            if email_status:
-                st.balloons()
-                st.success(f"Mubarak ho {name}! Form submit ho gaya.")
-            else:
-                st.warning("Data save ho gaya, magar email bhejney mein masla hua.")
+            admin_msg = f"New Student: {name}\nCourse: {course}\nEmail: {email_input}"
+            send_email("samimuhajir666@gmail.com", "ADMIN: New Admission", admin_msg)
+            send_email(email_input, "Admission Received - ADAm G", f"Assalamu Alaikum {name}, your form is received.")
+
         else:
             st.error("Meherbani karke saari malomat (Name, Email, Contact) lazmi likhein.")
