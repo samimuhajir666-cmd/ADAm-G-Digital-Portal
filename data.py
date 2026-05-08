@@ -70,15 +70,14 @@ with st.form("admission_form_main", clear_on_submit=True):
     col1, col2 = st.columns(2)
     with col1:
         name = st.text_input("Full Name")
+        age = st.number_input("Age", min_value=1, max_value=100, value=18)
         email_input = st.text_input("Student Email")
-        dob = st.date_input("Date of Birth")
         cnic_val = st.text_input("CNIC / B-Form Number")
         guardian_email = st.text_input("Parent Email")
 
     with col2:
-        # Is line se aap 1900 tak peeche ja sakte hain
-        agw = st.date_input("Date of Birth", value=datetime.date(2010, 1, 1), min_value=datetime.date(1900, 1, 1))
         contact = st.text_input("Contact Number")
+        dob = st.date_input("Date of Birth", value=datetime.date(2010, 1, 1), min_value=datetime.date(1900, 1, 1))
         course = st.selectbox("Course", ["Web Dev", "Python AI", "Graphic Design", "Hifz"])
         cast = st.selectbox("Background", ["Muhajir", "Sindhi", "Punjabi", "Balochi", "Pashtun"])
         hafiz_status = st.selectbox("Hafiz-e-Quran?", ["Yes", "No"])
@@ -97,9 +96,10 @@ with st.form("admission_form_main", clear_on_submit=True):
                 "Email": [email_input],
                 "CNIC": [cnic_val],
                 "Course": [course],
-                "Age": [age],
                 "Hafiz": [hafiz_status],
                 "Address": [address_val]
+                "Age": [age],          # Ye line check karein
+                "DOB": [str(dob)],     # Ye line check karein
             }
             df = pd.DataFrame(new_entry)
             file_path = "admission_data.csv"
