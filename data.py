@@ -81,8 +81,7 @@ with st.form("admission_form_main", clear_on_submit=True):
         course = st.selectbox("Course", ["Web Dev", "Python AI", "Graphic Design", "Hifz"])
         cast = st.selectbox("Background", ["Muhajir", "Sindhi", "Punjabi", "Balochi", "Pashtun"])
         hafiz_status = st.selectbox("Hafiz-e-Quran?", ["Yes", "No"])
-
-    address_val = st.text_area("Residential Address") # Sirf aik baar rakha hai
+        address_val = st.text_area("Residential Address") # Sirf aik baar rakha hai
     
     # --- SUBMIT BUTTON (Sirf aik baar form ke aakhir mein) ---
     submitted = st.form_submit_button("Submit Admission Request")
