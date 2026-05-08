@@ -14,7 +14,7 @@ def send_email(target_email, subject, body):
     msg['From'] = sender_email
     msg['To'] = target_email
     try:
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        with smtplib.SMTP('://gmail.com', 587) as server:
             server.starttls()
             server.login(sender_email, app_password)
             server.send_message(msg)
@@ -42,7 +42,7 @@ for msg in st.session_state.history:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-if prompt := st.chat_input("ADAM G Chatbot - Ask me anything about Admissions"):
+if prompt := st.chat_input("ADAM G Chatbot - Ask me anything"):
     st.session_state.history.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -55,7 +55,7 @@ if prompt := st.chat_input("ADAM G Chatbot - Ask me anything about Admissions"):
     elif "location" in query:
         answer = "We are located in Shah Faisal Colony, Karachi."
     else:
-        answer = "I am programmed for admission queries. Please fill the form below."
+        answer = "I am ADAM G Bot. Please use the form below for admissions."
 
     with st.chat_message("assistant"):
         st.markdown(answer)
@@ -63,7 +63,7 @@ if prompt := st.chat_input("ADAM G Chatbot - Ask me anything about Admissions"):
 
 st.divider()
 
-# --- 4. ADMISSION FORM SECTION (100% FIXED) ---
+# --- 4. ADMISSION FORM SECTION ---
 st.subheader("📝 ADAm G Admission Form")
 
 with st.form("admission_form_main", clear_on_submit=True):
@@ -73,7 +73,6 @@ with st.form("admission_form_main", clear_on_submit=True):
         age = st.number_input("Age", min_value=1, max_value=100, value=18)
         email_input = st.text_input("Student Email")
         cnic_val = st.text_input("CNIC / B-Form Number")
-        guardian_email = st.text_input("Parent Email")
 
     with col2:
         contact = st.text_input("Contact Number")
@@ -82,38 +81,54 @@ with st.form("admission_form_main", clear_on_submit=True):
         cast = st.selectbox("Background", ["Muhajir", "Sindhi", "Punjabi", "Balochi", "Pashtun"])
         hafiz_status = st.selectbox("Hafiz-e-Quran?", ["Yes", "No"])
     
-    # Is line ko bilkul peeche (margin ke sath) le aayein, column se bahar
-    address_val = st.text_area("Residential Address", key="main_address") 
-
+    address_val = st.text_area("Residential Address") 
     
-    # --- SUBMIT BUTTON (Sirf aik baar form ke aakhir mein) ---
+    # --- HERE IS THE SUBMIT BUTTON ---
     submitted = st.form_submit_button("Submit Admission Request")
 
     if submitted:
         if name and email_input and contact:
-            # SAVE TO CSV (Ab saari info save hogi)
+            # SAVE TO CSV (All fields included)
             new_entry = {
                 "Date": [str(datetime.date.today())],
                 "Name": [name],
                 "Email": [email_input],
                 "CNIC": [cnic_val],
                 "Course": [course],
+                "Age": [age],
+                "DOB": [str(dob)],
+                "Cast": [cast],
                 "Hafiz": [hafiz_status],
-                "Address": [address_val],
-                "Age": [age],          # Ye line check karein
-                "DOB": [str(dob)],     # Ye line check karein
+                "Address": [address_val]
             }
             df = pd.DataFrame(new_entry)
             file_path = "admission_data.csv"
             df.to_csv(file_path, mode='a', header=not os.path.exists(file_path), index=False)
             
+            # --- THE DIGITAL CARD ---
+            st.markdown(f"""
+            <div style="border: 3px solid #007bff; padding: 25px; border-radius: 15px; background-color: #ffffff; text-align: center; box-shadow: 10px 10px 5px #eeeeee; margin-top: 20px;">
+                <h1 style="color: #007bff; margin-bottom: 5px;">ADAm G Portal</h1>
+                <p style="font-size: 14px; color: gray; font-style: italic;">Official Admission Receipt</p>
+                <hr style="border: 1px solid #007bff; width: 80%; margin: auto;">
+                <div style="text-align: left; padding: 20px; font-family: sans-serif;">
+                    <p><strong>Student Name:</strong> {name}</p>
+                    <p><strong>Course:</strong> {course}</p>
+                    <p><strong>CNIC / ID:</strong> {cnic_val}</p>
+                    <p><strong>Date:</strong> {datetime.date.today()}</p>
+                </div>
+                <hr style="border: 1px solid #eeeeee;">
+                <p style="color: #28a745; font-weight: bold; font-size: 18px;">✅ APPLICATION RECEIVED</p>
+                <p style="font-size: 10px; color: gray;">Ref ID: {datetime.datetime.now().strftime('%Y%H%M%S')}</p>
+            </div>
+            <p style="text-align: center; color: gray; font-size: 12px; margin-top: 10px;">Please take a screenshot of this card for your records.</p>
+            """, unsafe_allow_html=True)
+            
             # --- NOTIFICATIONS ---
-            # 1. Admin Email
             admin_msg = f"New Student: {name}\nCNIC: {cnic_val}\nCourse: {course}\nContact: {contact}"
             send_email("samimuhajir666@gmail.com", "ADMIN: New Admission", admin_msg)
 
-            # 2. Student Confirmat
-            student_msg = f"Assalamu Alaikum {name},\n\nForm received! We will contact you soon for {course}.\n\nJazakAllah."
+            student_msg = f"Assalamu Alaikum {name},\n\nForm received for {course}. Our team will contact you soon.\n\nJazakAllah."
             email_status = send_email(email_input, "Form Received - ADAm G", student_msg)
             
             if email_status:
@@ -122,4 +137,4 @@ with st.form("admission_form_main", clear_on_submit=True):
             else:
                 st.warning("Data save ho gaya, magar email bhejney mein masla hua.")
         else:
-            st.error("Meherbani karke Name, Email aur Contact lazmi likhein.")
+            st.error("Meherbani karke saari malomat (Name, Email, Contact) lazmi likhein.")
