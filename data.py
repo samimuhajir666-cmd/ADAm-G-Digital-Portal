@@ -99,7 +99,7 @@ with st.form("admission_form_main", clear_on_submit=True):
                 "CNIC": [cnic_val],
                 "Course": [course],
                 "Hafiz": [hafiz_status],
-                "Address": [address_val]
+                "Address": [address_val],
                 "Age": [age],          # Ye line check karein
                 "DOB": [str(dob)],     # Ye line check karein
             }
