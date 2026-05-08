@@ -76,7 +76,8 @@ with st.form("admission_form_main", clear_on_submit=True):
         guardian_email = st.text_input("Parent Email")
 
     with col2:
-        age = st.number_input("Age", min_value=1, max_value=100)
+        # Is line se aap 1900 tak peeche ja sakte hain
+        agw = st.date_input("Date of Birth", value=datetime.date(2010, 1, 1), min_value=datetime.date(1900, 1, 1))
         contact = st.text_input("Contact Number")
         course = st.selectbox("Course", ["Web Dev", "Python AI", "Graphic Design", "Hifz"])
         cast = st.selectbox("Background", ["Muhajir", "Sindhi", "Punjabi", "Balochi", "Pashtun"])
