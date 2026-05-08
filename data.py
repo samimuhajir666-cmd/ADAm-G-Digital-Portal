@@ -75,7 +75,7 @@ with st.form("admission_form_main", clear_on_submit=True):
         cnic_val = st.text_input("CNIC / B-Form Number")
         guardian_email = st.text_input("Parent Email")
 
-       with col2:
+    with col2:
         contact = st.text_input("Contact Number")
         dob = st.date_input("Date of Birth", value=datetime.date(2010, 1, 1), min_value=datetime.date(1900, 1, 1))
         course = st.selectbox("Course", ["Web Dev", "Python AI", "Graphic Design", "Hifz"])
@@ -112,7 +112,7 @@ with st.form("admission_form_main", clear_on_submit=True):
             admin_msg = f"New Student: {name}\nCNIC: {cnic_val}\nCourse: {course}\nContact: {contact}"
             send_email("samimuhajir666@gmail.com", "ADMIN: New Admission", admin_msg)
 
-            # 2. Student Confirmation
+            # 2. Student Confirmat
             student_msg = f"Assalamu Alaikum {name},\n\nForm received! We will contact you soon for {course}.\n\nJazakAllah."
             email_status = send_email(email_input, "Form Received - ADAm G", student_msg)
             
