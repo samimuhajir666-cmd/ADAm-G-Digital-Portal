@@ -75,13 +75,16 @@ with st.form("admission_form_main", clear_on_submit=True):
         cnic_val = st.text_input("CNIC / B-Form Number")
         guardian_email = st.text_input("Parent Email")
 
-    with col2:
+       with col2:
         contact = st.text_input("Contact Number")
         dob = st.date_input("Date of Birth", value=datetime.date(2010, 1, 1), min_value=datetime.date(1900, 1, 1))
         course = st.selectbox("Course", ["Web Dev", "Python AI", "Graphic Design", "Hifz"])
         cast = st.selectbox("Background", ["Muhajir", "Sindhi", "Punjabi", "Balochi", "Pashtun"])
         hafiz_status = st.selectbox("Hafiz-e-Quran?", ["Yes", "No"])
-        address_val = st.text_area("Residential Address") # Sirf aik baar rakha hai
+    
+    # Is line ko bilkul peeche (margin ke sath) le aayein, column se bahar
+    address_val = st.text_area("Residential Address", key="main_address") 
+
     
     # --- SUBMIT BUTTON (Sirf aik baar form ke aakhir mein) ---
     submitted = st.form_submit_button("Submit Admission Request")
