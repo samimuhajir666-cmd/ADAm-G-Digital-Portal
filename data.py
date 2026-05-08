@@ -93,27 +93,26 @@ with st.form("admission_form_main", clear_on_submit=True):
 
     address = st.text_area("Home Address")
     submitted = st.form_submit_button("Submit Application")
-
     if submitted:
-        if name and contact:
-            # 1. Save to CSV
-            data = {"Name": [name], "Contact": [contact], "Course": [course], "Date": [str(datetime.date.today())]}
-            df = pd.DataFrame(data)
-            file = "admissions.csv"
-            if not os.path.isfile(file):
-                df.to_csv(file, index=False)
-            else:
-                df.to_csv(file, mode='a', header=False, index=False)
+        if name and email_input:
+            # Everything below is pushed inside (indented)
+            st.markdown(f"""
+            <div style="border: 3px solid #007bff; padding: 20px; border-radius: 10px; background-color: white; text-align: center; color: black;">
+                <h2 style="color: #007bff;">ADAm G Admission Card</h2>
+                <hr>
+                <p><strong>Name:</strong> {name}</p>
+                <p><strong>Course:</strong> {course}</p>
+                <p><strong>Status:</strong> Received</p>
+            </div>
+            """, unsafe_allow_html=True)
             
-            # 2. Send Email Notification
-            email_status = send_admission_email(name, course, "samimuhajir666@gmail.com")
-            
-            if email_status:
-                st.balloons()
-                st.snow()     
-                st.toast('Admission Form Successfully Received!', icon='✅')
-                st.success(f"Mubarak ho {name}! Aapka data save ho gaya aur Admin ko email bhej di gayi hai.")
+            st.balloons()
+            st.success(f"Mubarak ho {name}!")
+            send_email("samimuhajir666@gmail.com", "New Student", f"Name: {name}, Course: {course}")
+        else:
+            st.error("Please fill all fields")
+
             else:
-                st.warning(f"Data save ho gaya hai, lekin email bhejney mein masla hua.")
+                st.warning(f"data is saved but please write correct information ")
         else:
             st.error("Meherbani karke Name aur Contact number lazmi likhein.")
